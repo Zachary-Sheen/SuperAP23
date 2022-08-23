@@ -1,24 +1,43 @@
 package pkg;
 import java.util.*;
 import java.io.*;
+import java.util.Scanner;
 
 public class BBoard {		// This is your main file that connects all classes.
 	// Think about what your global variables need to be.
+	private String title;
+	private ArrayList<User> userarr;
+	private ArrayList<Message> messarr;
+	private User currentUser;
 
 	// Default constructor that creates a board with a defaulttitle, empty user and message lists,
 	// and no current user
 	public BBoard() {
-		
+		title = "";
+		userarr = new ArrayList<User>();
+		messarr = new ArrayList<Message>();
 	}
 
 	// Same as the default constructor except it sets the title of the board
 	public BBoard(String ttl) {	
+		title = ttl;
+		userarr = new ArrayList<User>();
+		messarr = new ArrayList<Message>();
 	}
 
 	// Gets a filename of a file that stores the user info in a given format (users.txt)
 	// Opens and reads the file of all authorized users and passwords
 	// Constructs a User object from each name/password pair, and populates the userList ArrayList.
 	public void loadUsers(String inputFile) throws FileNotFoundException {
+		Scanner users = new Scanner(new File(inputFile));
+		String line = "";
+		int counter = 0;
+		while(users.hasNextLine()){
+			line = users.nextLine();
+			String[] split = line.split(" ");
+			userarr.add(new User(split[0],split[1]));
+		}
+		login();
 
 	}
 
@@ -28,6 +47,33 @@ public class BBoard {		// This is your main file that connects all classes.
 	// If not, it will keep asking until a match is found or the user types 'q' or 'Q' as username to quit
 	// When the users chooses to quit, sayu "Bye!" and return from the login function
 	public void login(){
+		Scanner input = new Scanner(System.in);
+		boolean isDone = false;
+		while(true){
+		String user;
+		String pwd;
+		System.out.print("Enter your username ('Q' or 'q' to quit): ");
+		user = input.nextLine();
+		if(user.equals("Q") || user.equals("q")){
+				System.out.println("Cya lata brotha!");
+				return;
+			}
+		System.out.print("\nEnter your password ('Q' or 'q' to quit): ");
+		pwd = input.nextLine();
+			for(int i = 0; i<userarr.size(); i++){
+				if(userarr.get(i).check(user,pwd)){
+					currentUser = userarr.get(i);
+					isDone = true;
+				} 
+			}
+			if(isDone){
+					System.out.println("Welcome back Sir " + currentUser.getUsername());
+					break;
+				} else{
+					System.out.println("Invalid username and/or password");
+				}
+		}
+		
 
 	}
 	
@@ -42,13 +88,56 @@ public class BBoard {		// This is your main file that connects all classes.
 	// Q/q should reset the currentUser to 0 and then end return
 	// Note: if login() did not set a valid currentUser, function must immediately return without showing menu
 	public void run(){
-
+		Scanner input = new Scanner(System.in);
+		String inputs = "";
+		while(true){
+			String display = "\n--- Display Messages ('D' or 'd')\n--- Add New Topic ('N' or 'n')\n--- Add Reply ('R' or 'r')\n--- Change Password ('P' or 'p')\n--- Quit ('Q' or 'q')";
+			System.out.println(display);
+			inputs = input.nextLine();
+		if(inputs.equals("D") || inputs.equals("d"))
+		{
+			display();
+			break;
+		}
+		else if(inputs.equals("N") || inputs.equals("n"))
+		{
+			addTopic();
+			break;
+		}
+		else if(inputs.equals("R") || inputs.equals("r"))
+		{
+			addReply();
+			break;
+		}
+		else if(inputs.equals("P") || inputs.equals("p"))
+		{
+			setPassword();
+			break;
+		}
+		else if(inputs.equals("Q") || inputs.equals("q"))
+		{
+			System.out.print("Later Skater");
+			break;
+		}
+		else{
+			System.out.print("Enter a valid input");
+		}
+	}
 	}
 
 	// Traverse the BBoard's message list, and invote the print function on Topic objects ONLY
 	// It will then be the responsibility of the Topic object to invoke the print function recursively on its own replies
 	// The BBoard display function will ignore all reply objects in its message list
 	private void display(){
+		if(messarr.size() == 0){
+			System.out.print("No messages available");
+			run();
+			return;
+		}
+		System.out.println("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><>\n");
+		for(int i = 0; i < messarr.size();i++){
+			messarr.get(i).print();
+		}
 
 	}
 
