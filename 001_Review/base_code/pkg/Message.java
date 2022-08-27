@@ -33,19 +33,22 @@ public class Message {
 	// Note: Each indentation increment represents 2 spaces. e.g. if indentation ==  1, the reply should be indented 2 spaces, 
 	// if it's 2, indent by 4 spaces, etc. 
 	public void print(int indentation){
-		int ids = indentation;
+		int ids = indentation+1;
+		System.out.println(id);
 		int indents = indentation*2;
 		String topbottext = "\n<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>";
-		String message = "Message #"+id+": "+subject+"\n From " + person + ": "+mess + ""+children.size()+"\n";
+		String message = "Message #"+id+":"+subject;
+		String from = "From " + person + ": "+mess + ""+"\n";
 		for(int i = 0; i<=indents; i++)
 		{
-			// System.out.print(indents);
+			from = " " + from;
 			message = " " + message;
 		}
-		System.out.print(message);
+		System.out.print(message + "\n" + from);
 		
-		for(int i = 0; i<children.size();i++){
-			children.get(i).print(ids++);
+		for(int d = 0; d<children.size();d++){
+			System.out.println("running" + children.size());
+			children.get(d).print(ids);
 		}
 		
 	}

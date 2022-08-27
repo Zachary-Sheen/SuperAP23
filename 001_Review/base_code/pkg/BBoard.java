@@ -92,6 +92,7 @@ public class BBoard {		// This is your main file that connects all classes.
 	public void run(){
 		Scanner input = new Scanner(System.in);
 		String inputs = "";
+		System.out.println("Menu:");
 		while(true){
 			String display = "\n--- Display Messages ('D' or 'd')\n--- Add New Topic ('N' or 'n')\n--- Add Reply ('R' or 'r')\n--- Change Password ('P' or 'p')\n--- Quit ('Q' or 'q')";
 			System.out.println(display);
@@ -140,9 +141,11 @@ public class BBoard {		// This is your main file that connects all classes.
 			return;
 		}
 		for(int i = 0; i < messarr.size();i++){
+			if(!messarr.get(i).isReply()){
 			messarr.get(i).print(1);
+			}	
 		}
-		System.out.println(""+topbottext+"");
+		System.out.print(topbottext);
 		run();
 
 	}
@@ -254,6 +257,7 @@ public class BBoard {		// This is your main file that connects all classes.
 			System.out.println("Input new password: ");
 			inputs = input.nextLine();
 			currentUser.setPassword(copyInput,inputs);
+			run();
 			break;
 		}
 		System.out.println("Invalid password");
