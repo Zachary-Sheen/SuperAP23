@@ -23,6 +23,10 @@ public class User {
 		return name;
 	}
 
+	public String getPassword(){
+		return passwd;
+	}
+
 	// Returns true if the stored username/password matches the parameters. Otherwise returns false.
 	// Note that, even with a User with empty name and password, this is actually a valid User object (it is the default User), 
 	// This function must still return false if given an empty username string.  

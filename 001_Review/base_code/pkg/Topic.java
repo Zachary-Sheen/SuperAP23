@@ -11,9 +11,9 @@ public class Topic extends Message {
 
 	// Parameterized constructor
 	public Topic(String auth, String subj, String bod, int i) {
-		String re = "Re: \""+subj + "\"";
-		String corr = "\""+bod +"\"";
-		super(auth,re,corr,i);
+		
+		
+		super(auth,subj,bod,i);
 	}
 
 	// Returns if it's a reply (false)

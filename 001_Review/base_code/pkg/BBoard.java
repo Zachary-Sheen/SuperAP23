@@ -9,6 +9,7 @@ public class BBoard {		// This is your main file that connects all classes.
 	private ArrayList<User> userarr;
 	private ArrayList<Message> messarr;
 	private User currentUser;
+	private static int idNumber;
 
 	// Default constructor that creates a board with a defaulttitle, empty user and message lists,
 	// and no current user
@@ -47,6 +48,7 @@ public class BBoard {		// This is your main file that connects all classes.
 	// If not, it will keep asking until a match is found or the user types 'q' or 'Q' as username to quit
 	// When the users chooses to quit, sayu "Bye!" and return from the login function
 	public void login(){
+		System.out.println("ZMoney's sick board");
 		Scanner input = new Scanner(System.in);
 		boolean isDone = false;
 		while(true){
@@ -129,15 +131,19 @@ public class BBoard {		// This is your main file that connects all classes.
 	// It will then be the responsibility of the Topic object to invoke the print function recursively on its own replies
 	// The BBoard display function will ignore all reply objects in its message list
 	private void display(){
+		String topbottext = "\n<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>\n";
+		System.out.println(""+topbottext+"");
 		if(messarr.size() == 0){
-			System.out.print("No messages available");
+			System.out.print("No messages available\n");
+			System.out.println(""+topbottext+"");
 			run();
 			return;
 		}
-		System.out.println("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><>\n");
 		for(int i = 0; i < messarr.size();i++){
-			messarr.get(i).print();
+			messarr.get(i).print(1);
 		}
+		System.out.println(""+topbottext+"");
+		run();
 
 	}
 
@@ -152,22 +158,29 @@ public class BBoard {		// This is your main file that connects all classes.
 
 	// Each Topic also stores the username of currentUser; and message ID, which is (index of its Message + 1)
 
-	// For example, the first message on the board will be a Topic who's index will be stored at 0 in the messageList ArrayList,
+	// For example, the first message on the board will be a Topic who's index will be stored at 0 in the messarr ArrayList,
 	// so its message ID will be (0+1) = 1
-	// Once the Topic has been constructed, add it to the messageList
+	// Once the Topic has been constructed, add it to the messarr
 	// This should invoke your inheritance of Topic to Message
 	private void addTopic(){
-
+		idNumber++;
+		Scanner inputs = new Scanner(System.in);
+		System.out.print("Subject: ");
+		String subject = inputs.nextLine();
+		System.out.print("Body: ");
+		String body = inputs.nextLine();
+		messarr.add(new Topic(currentUser.getUsername()," \""+subject + "\"","\""+body +"\"",idNumber));
+		run();
 	}
 
 	// This function asks the user to enter a reply to a given Message (which may be either a Topic or a Reply, so we can handle nested replies).
 	//		The addReply function first asks the user for the ID of the Message to which they are replying;
-	//		if the number provided is greater than the size of messageList, it should output and error message and loop back,
+	//		if the number provided is greater than the size of messarr, it should output and error message and loop back,
 	// 		continuing to ask for a valid Message ID number until the user enters it or -1.
 	// 		(-1 returns to menu, any other negative number asks again for a valid ID number)
 	
 	// If the ID is valid, then the function asks for the body of the new message, 
-	// and constructs the Reply, pushing back the Reply on to the messageList.
+	// and constructs the Reply, pushing back the Reply on to the messarr.
 	// The subject of the Reply is a copy of the parent Topic's subject with the "Re: " prefix.
 	// e.g., suppose the subject of message #9 was "Thanks", the user is replying to that message:
 
@@ -182,15 +195,41 @@ public class BBoard {		// This is your main file that connects all classes.
 	// and "It was a pleasure implementing this!" as its body.
 
 	// How will we know what Topic this is a reply to?
-	// In addition to keeping a pointer to all the Message objects in BBoard's messageList ArrayList
+	// In addition to keeping a pointer to all the Message objects in BBoard's messarr ArrayList
 	// Every Message (wheather Topic or Reply) will also store an ArrayList of pointers to all of its Replies.
 	// So whenever we build a Reply, we must immediately store this Message in the parent Message's list. 
 	// The Reply's constructor should set the Reply's subject to "Re: " + its parent's subject.
 	// Call the addChild function on the parent Message to push back the new Message (to the new Reply) to the parent's childList ArrayList.
-	// Finally, push back the Message created to the BBoard's messageList. 
+	// Finally, push back the Message created to the BBoard's messarr. 
 	// Note: When the user chooses to return to the menu, do not call run() again - just return fro mthis addReply function. 
 	private void addReply(){
-
+		Scanner inputs = new Scanner(System.in);
+		idNumber++;
+		while(true)
+		{
+			System.out.print("\nEnter Message ID (-1 for Menu, -2 for IDS): ");
+			int inputInt = inputs.nextInt();
+			inputs.nextLine();
+			if(inputInt == -1)
+			{
+				return;
+			}else if(inputInt == -2){
+				for(int i = 0; i<messarr.size();i++){
+					System.out.print(""+messarr.get(i).getId()+ "  ");
+				}
+			}
+			else if(inputInt > idNumber||inputInt <= 0){
+				System.out.print("\nInvalid ID");
+			} else{
+				System.out.print("\nBody: ");
+				String input = inputs.nextLine();
+				int id = inputInt-1;
+				messarr.get(id).addChild(new Reply(currentUser.getUsername(),"Re: " +messarr.get(id).getSubject(),"\""+input+"\"",idNumber));
+				messarr.add(new Reply(currentUser.getUsername(),"Re: " +messarr.get(id).getSubject(),"\""+input+"\"",idNumber));
+				break;
+			}
+		}
+		run();
 	}
 
 	// This function allows the user to change their current password.
@@ -201,7 +240,24 @@ public class BBoard {		// This is your main file that connects all classes.
 	// Any password is allowed except 'c' or 'C' for allowing the user to quit out to the menu. 
 	// Once entered, the user will be told "Password Accepted." and returned to the menu.
 	private void setPassword(){
-		
+		while(true){
+		Scanner input = new Scanner(System.in);
+		System.out.print("Input old password (Press 'C' or 'c' to stop): ");
+		String inputs = input.nextLine();
+		String copyInput;
+		if(inputs.equals("C")||inputs.equals("c"))
+		{
+			run();
+			return;
+		} else if(inputs.equals(currentUser.getPassword())){
+			copyInput = inputs;
+			System.out.println("Input new password: ");
+			inputs = input.nextLine();
+			currentUser.setPassword(copyInput,inputs);
+			break;
+		}
+		System.out.println("Invalid password");
+	}
 	}
 
 }
