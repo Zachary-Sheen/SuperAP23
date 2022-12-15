@@ -1,0 +1,308 @@
+<html>
+    <body>
+            
+        <head>
+        <title>Page Title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="layout.css">
+        <script src="Assignment.js"></script>
+        </head>
+    
+            <div class = header>
+                The Homework Manager                            
+            </div>
+            
+            <!-- <div class = bottomHeader>
+                <p>Created by Zac (Z-Money) Sheen</p>
+            </div> -->
+    
+            <div class = contentHeader>
+                <h1>Enter Your Homework and Test Information Here</h1>
+                <h2>Name  |    Test/Quiz/Homework     |  Due Date  |   Expected Time (Minutes)</h2>
+            </div>
+
+        <head>
+        <style>
+            input{
+                margin: 5px;
+                font-size:11pt;
+                font-weight:bolder;
+            }
+            select{
+                margin:5px;
+                font-size:10pt;
+                font-weight:bolder;
+            }
+        </style>
+        </head>
+            <!-- <div class = container id ='container'> -->
+            <div class = containers id='input-cont' ></div>
+            <!-- </div> -->
+            
+            <div class = add><button onclick='addInput();addDropdown();addDueDate();addTime()'>Add Another Assignment/Test</button></div>
+       
+
+
+            <div class="bt-btn">
+                <button onclick='getInputs()'; class="bt.btn">Submit</button>
+              </div>
+
+
+
+
+            <script>
+                const container = document.getElementById('input-cont');
+                const selectContainer = document.getElementById("input-cont");
+                const dueDateContainer = document.getElementById("input-cont");
+                const timeContainer = document.getElementById("input-cont");
+                var inputCount = 0;
+                var count = 0;
+                var dueCount = 0;
+                var homeworkNumber = 0;
+                const assignArr = [];
+                var dates = new Date();
+                var dayNum = dates.getDay();
+                var date = "";
+                var dayArray = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","More Than 1 Week","More Than a Month"];
+                date = dayArray[dayNum];
+                nextDate = dayArray[dayNum+1];
+                const tempArr = [new Assignment("AP French", "Assignment", "Friday","60"),new Assignment("AP ECON", "Assignment", "Tuesday","40"),new Assignment("AP LIT", "Assignment", "Wednesday","26"),new Assignment("AP HUF", "Assignment", "Sunday","35"),new Assignment("Physics Project", "Assignment", "More Than a Month","120"),new Assignment("Comp Sci", "Assignment", "Monday","20"),new Assignment("AP Lang", "Test", "Thursday","20")];
+                console.log(reArrange(tempArr));
+                const upcoming = [];
+                
+
+                
+                function addInput(){
+                    inputCount++; 
+                    homeworkNumber++;
+                    if(inputCount>15){
+                        alert('You can add maximum 15 input fields.');
+                        return;
+                    }
+                    let input = document.createElement('input');
+                    input.placeholder = 'Homework #'+homeworkNumber+' Name';
+                    container.appendChild(input);
+                    
+                }
+
+
+
+
+                function addDropdown(){
+                    count++;
+                    if(count>15){
+                        return;
+                    }
+                    let selectInput = document.createElement('select');
+                    selectInput.placeholder = 'PLEASE SELECT SOMETHING';
+                    selectInput.options[0] = new Option("Assignment","Assignment");
+                    selectInput.options[1] = new Option("Test","Test");
+                    selectInput.options[2] = new Option("Quiz","Quiz");
+                    selectContainer.appendChild(selectInput);
+                    // alert('this code is running');
+                }
+
+
+
+                function addDueDate(){
+                    dueCount++;
+                    if(dueCount>15){
+                        return;
+                    }
+                    let due = document.createElement('select');
+                    due.options[0] = new Option("Monday","Monday");
+                    due.options[1] = new Option("Tuesday","Tuesday");
+                    due.options[2] = new Option("Wednesday","Wednesday");
+                    due.options[3] = new Option("Thursday","Thursday");
+                    due.options[4] = new Option("Friday","Friday");
+                    due.options[5] = new Option("Saturday","Saturday");
+                    due.options[6] = new Option("Sunday","Sunday");
+                    due.options[7] = new Option("More Than 1 Week","More Than 1 Week");
+                    due.options[8] = new Option("More than a month","More Than a Month");
+                    dueDateContainer.appendChild(due);
+                }
+
+
+
+                function addTime(){
+                    if(inputCount>15){
+                        return;
+                    }
+                    let time = document.createElement("input");
+                    time.placeholder = "Input Expected Time";
+                    timeContainer.appendChild(time);
+
+                }
+
+
+
+                function getInputs(){
+                    var runs = 0;
+                    var inputs = null;
+                    var selects = null;
+                    inputs = document.getElementsByTagName("input");
+                    selects = document.getElementsByTagName("select");
+                    for(i = 0;i<inputs.length;i+=2){
+                        if(inputs[i].value != '')
+                        { 
+                            console.log((inputs[i].value),(selects[i].value),(selects[i+1].value),(inputs[i+1].value))  
+                        assignArr.push(new Assignment((inputs[i].value),(selects[i].value),(selects[i+1].value),(inputs[i+1].value)));
+                        } 
+                    }
+                    const fullArr = reArrange(assignArr);
+                    
+                }
+                
+                
+
+                function reArrange(assignments){ //Re-arranging array in times and days
+                    const timeArr = [];
+                    const dayArr = [];
+                    const upcomingArr = [];
+                    const upcomingLaterArr = [];
+                    const testArr = [];
+                    for(d = 0;d<assignments.length;d++){
+                        if(assignments[d].quizTestHW == "Test" || assignments[d].quizTestHW == "Quiz"){
+
+                            // console.log(assignments[d]);
+                            testArr.push(assignments[d]);
+
+                        }else if(parseInt(assignments[d].time)<=10){
+
+                            timeArr.push(assignments[d]);
+                            console.log(assignments[d]);
+
+                        }else if(assignments[d].due == "More Than 1 Week" || assignments[d].due == "More Than a Month"){
+                            if(assignments[d].due == "More Than 1 Week"){
+                            upcomingArr.push(assignments[d]);
+                            } else{
+                                upcomingLaterArr.push(assignments[d]);
+                            }
+                        }
+                         else{
+                            dayArr.push(assignments[d]); // other assignments
+                        }
+                    }
+                    
+                    //  console.log(upcomingArr);
+                    //  console.log(assignments);
+                    //  console.log(dayArr,testArr,dueFirst);
+                     console.log(daySort(dayArr,testArr));
+                    
+
+                }
+
+
+                function timeSort(inputArr) {
+                    if (inputArr.length <= 1) { 
+                        return inputArr;
+                        console.log(running);
+                    } else {
+
+                        var left = [];
+                        var right = [];
+                        var newArray = [];
+                        var pivot = inputArr.pop();
+                        var length = inputArr.length;
+
+                        for (var i = 0; i < length; i++) {
+                            if (inputArr[i].time <= pivot.time) {
+                                left.push(inputArr[i]);
+                            } else {
+                                right.push(inputArr[i]);
+                            }
+                        }
+
+                        return newArray.concat(timeSort(left), pivot, timeSort(right));
+                    }
+                }
+                
+                function daySort(inputArr,quizArr)
+                {
+                    let n = inputArr.length;
+                    const weekArr = [];
+                    cols = 7;
+                    for(i = 0;i<cols;i++)
+                    {
+                        weekArr[i] = [];
+                    }
+                    
+                    //starts of each day
+                    weekArr[0].push(new Assignment("Start","Test","Sunday","0"));
+                    weekArr[1].push(new Assignment("Start","Test","Monday","0"));
+                    weekArr[2].push(new Assignment("Start","Test","Tuesday","0"));
+                    weekArr[3].push(new Assignment("Start","Test","Wednesday","0"));
+                    weekArr[4].push(new Assignment("Start","Test","Thursday","0"));
+                    weekArr[5].push(new Assignment("Start","Test","Friday","0"));
+                    weekArr[6].push(new Assignment("Start","Test","Saturday","0"));
+                    console.log(inputArr);
+
+                    //rearranging to start today
+                    const copyArr = [];
+                    var counter = 0;
+                    for(i = 0; i<weekArr.length;i++)
+                    {
+                        if(weekArr[i][0].due != date)
+                        {
+                            copyArr.push(weekArr[i]);
+                            counter++;
+                        }
+                        else
+                        {
+                            weekArr.splice(i-1,i);
+                            break;
+                        }
+                    }
+                    console.log(copyArr,"!!!");
+                    // weekArr = weekArr.concat(copyArr);
+                    for(i = 0;i<copyArr.length;i++){
+                        weekArr.push(copyArr[i]);
+                    }
+
+                    // sorting to days
+                    for(i = 0;i<n;i++)
+                    {
+                        for(day = 0;day<weekArr.length;day++){
+                            if(weekArr[day][0].due == inputArr[i].due)
+                            {
+                                weekArr[day].push(inputArr[i]);
+                                break;
+                            }
+                        }
+                    }
+                    console.log(weekArr);
+                    console.log(weekArr.length);
+
+                    //putting tests/quizzes
+                    for(i = 0; i<quizArr.length;i++)
+                    {
+                        for(day = 0;day<weekArr.length;day++)
+                        {
+                            if(weekArr[day][0].due == quizArr[i].due)
+                            {
+                                weekArr[day].push(quizArr[i]);
+                                break;
+                            }
+                        }
+                    }
+                    console.log(weekArr);
+                    // removing starts of each day !FIX!
+                    // for(i = 0;i<weekArr.length;i++)
+                    // {
+                    //     console.log(weekArr[i][0]);
+                    //     weekArr[i].splice(0,1)
+                    // }
+                    // console.log(weekArr);
+                    
+                }
+
+
+                function eachDay(assignments){
+
+                }
+            </script>
+         
+       
+        </body>
+</html>
