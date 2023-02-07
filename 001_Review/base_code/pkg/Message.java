@@ -16,7 +16,7 @@ public class Message {
 	}
 	
 	// Parameterized Constructor
-	public Message(String auth, String subj, String bod, int i) {
+	public Message(String auth, String subj, String bod, int i) { //O(1)
 		mess = ""+bod;
 		subject = ""+subj;
 		person = auth;
@@ -32,7 +32,7 @@ public class Message {
 
 	// Note: Each indentation increment represents 2 spaces. e.g. if indentation ==  1, the reply should be indented 2 spaces, 
 	// if it's 2, indent by 4 spaces, etc. 
-	public void print(int indentation){
+	public void print(int indentation){ //2n
 		int ids = indentation+1;
 		System.out.println(id);
 		int indents = indentation*2;
@@ -69,7 +69,7 @@ public class Message {
 	}
 
 	// Adds a child pointer to the parent's childList.
-	public void addChild(Message child){
+	public void addChild(Message child){ // n
 		children.add(child);
 	}
 

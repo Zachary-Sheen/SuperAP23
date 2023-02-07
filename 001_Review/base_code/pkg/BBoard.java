@@ -20,7 +20,7 @@ public class BBoard {		// This is your main file that connects all classes.
 	}
 
 	// Same as the default constructor except it sets the title of the board
-	public BBoard(String ttl) {	
+	public BBoard(String ttl) {	//O(1)
 		title = ttl;
 		userarr = new ArrayList<User>();
 		messarr = new ArrayList<Message>();
@@ -29,7 +29,7 @@ public class BBoard {		// This is your main file that connects all classes.
 	// Gets a filename of a file that stores the user info in a given format (users.txt)
 	// Opens and reads the file of all authorized users and passwords
 	// Constructs a User object from each name/password pair, and populates the userList ArrayList.
-	public void loadUsers(String inputFile) throws FileNotFoundException {
+	public void loadUsers(String inputFile) throws FileNotFoundException {//O(n)
 		Scanner users = new Scanner(new File(inputFile));
 		String line = "";
 		int counter = 0;
@@ -47,7 +47,8 @@ public class BBoard {		// This is your main file that connects all classes.
 	// If a match is found, it sets currentUser to the identified User from the list
 	// If not, it will keep asking until a match is found or the user types 'q' or 'Q' as username to quit
 	// When the users chooses to quit, sayu "Bye!" and return from the login function
-	public void login(){
+
+	public void login(){ // k*n  k>=1
 		System.out.println("ZMoney's sick board");
 		Scanner input = new Scanner(System.in);
 		boolean isDone = false;
@@ -89,7 +90,7 @@ public class BBoard {		// This is your main file that connects all classes.
 	// With any wrong input, user is asked to try again
 	// Q/q should reset the currentUser to 0 and then end return
 	// Note: if login() did not set a valid currentUser, function must immediately return without showing menu
-	public void run(){
+	public void run(){ //n
 		Scanner input = new Scanner(System.in);
 		String inputs = "";
 		System.out.println("Menu:");
@@ -131,7 +132,7 @@ public class BBoard {		// This is your main file that connects all classes.
 	// Traverse the BBoard's message list, and invote the print function on Topic objects ONLY
 	// It will then be the responsibility of the Topic object to invoke the print function recursively on its own replies
 	// The BBoard display function will ignore all reply objects in its message list
-	private void display(){
+	private void display(){ //n 
 		String topbottext = "\n<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>\n";
 		System.out.println(""+topbottext+"");
 		if(messarr.size() == 0){
@@ -165,7 +166,7 @@ public class BBoard {		// This is your main file that connects all classes.
 	// so its message ID will be (0+1) = 1
 	// Once the Topic has been constructed, add it to the messarr
 	// This should invoke your inheritance of Topic to Message
-	private void addTopic(){
+	private void addTopic(){//n
 		idNumber++;
 		Scanner inputs = new Scanner(System.in);
 		System.out.print("Subject: ");
@@ -205,7 +206,7 @@ public class BBoard {		// This is your main file that connects all classes.
 	// Call the addChild function on the parent Message to push back the new Message (to the new Reply) to the parent's childList ArrayList.
 	// Finally, push back the Message created to the BBoard's messarr. 
 	// Note: When the user chooses to return to the menu, do not call run() again - just return fro mthis addReply function. 
-	private void addReply(){
+	private void addReply(){//n
 		Scanner inputs = new Scanner(System.in);
 		idNumber++;
 		while(true)
@@ -242,7 +243,7 @@ public class BBoard {		// This is your main file that connects all classes.
 	// 		The user is welcome to enter 'c' or 'C' to cancel the setting of a password and return to the menu.
 	// Any password is allowed except 'c' or 'C' for allowing the user to quit out to the menu. 
 	// Once entered, the user will be told "Password Accepted." and returned to the menu.
-	private void setPassword(){
+	private void setPassword(){ // n
 		while(true){
 		Scanner input = new Scanner(System.in);
 		System.out.print("Input old password (Press 'C' or 'c' to stop): ");
