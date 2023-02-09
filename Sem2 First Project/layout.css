@@ -46,13 +46,20 @@ body {
   border-bottom-color: #fff;
 }
 
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
 .dropdown-menu {
   display: none;
   position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1;
   background-color: #f9f9f9;
   min-width: 160px;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
 }
 
 .dropdown-item {
@@ -65,4 +72,5 @@ body {
 .dropdown-item:hover {
   background-color: #f1f1f1;
 }
+
 
